@@ -35,7 +35,7 @@ let package = Package(
         .package(url: "https://github.com/google/flatbuffers.git", from: "25.2.10"),
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.25.0"),
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.29.0"),
-        .package(url: "https://github.com/apple/swift-atomics.git", from: "1.3.0"),
+        .package(url: "https://github.com/apple/swift-atomics.git", from: "1.3.0")
     ],
     targets: [
         .target(
@@ -50,7 +50,7 @@ let package = Package(
             dependencies: [
                 .target(name: "ArrowC"),
                 .product(name: "FlatBuffers", package: "flatbuffers"),
-                .product(name: "Atomics", package: "swift-atomics"),
+                .product(name: "Atomics", package: "swift-atomics")
             ],
             swiftSettings: [
                 // build: .unsafeFlags(["-warnings-as-errors"])
@@ -61,7 +61,7 @@ let package = Package(
             dependencies: [
                 .target(name: "Arrow"),
                 .product(name: "GRPC", package: "grpc-swift"),
-                .product(name: "SwiftProtobuf", package: "swift-protobuf"),
+                .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ],
             swiftSettings: [
                 // build: .unsafeFlags(["-warnings-as-errors"])
@@ -79,7 +79,7 @@ let package = Package(
             resources: [
                 .process("Resources/testdata_double.arrow"),
                 .process("Resources/testdata_bool.arrow"),
-                .process("Resources/testdata_struct.arrow"),
+                .process("Resources/testdata_struct.arrow")
             ],
             swiftSettings: [
                 // build: .unsafeFlags(["-warnings-as-errors"])
@@ -91,6 +91,6 @@ let package = Package(
             swiftSettings: [
                 // build: .unsafeFlags(["-warnings-as-errors"])
             ]
-        ),
+        )
     ]
 )
