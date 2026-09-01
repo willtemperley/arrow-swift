@@ -25,7 +25,7 @@ extension ArrowJSON {
         .init(
             schema: self.schema,
             batches: self.batches.map { batch in
-                    .init(count: batch.count, columns: batch.columns.map { $0.withoutPlaceholderValues() })
+                .init(count: batch.count, columns: batch.columns.map { $0.withoutPlaceholderValues() })
             },
             dictionaries: self.dictionaries
         )

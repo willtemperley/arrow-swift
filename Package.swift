@@ -39,7 +39,7 @@ let package = Package(
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.25.0"),
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.29.0"),
         .package(url: "https://github.com/apple/swift-atomics.git", from: "1.3.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.7.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.7.0")
     ],
     targets: [
         .target(
@@ -87,7 +87,7 @@ let package = Package(
             name: "ArrowJSONIntegrationTest",
             dependencies: [
                 "Arrow",
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
         )
     ]

@@ -20,9 +20,9 @@ import Arrow
 import Foundation
 
 enum IntegrationMode: String, ExpressibleByArgument, CaseIterable {
-  case arrowToJson = "ARROW_TO_JSON"
-  case jsonToArrow = "JSON_TO_ARROW"
-  case validate = "VALIDATE"
+    case arrowToJson = "ARROW_TO_JSON"
+    case jsonToArrow = "JSON_TO_ARROW"
+    case validate = "VALIDATE"
 }
 
 @main

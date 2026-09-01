@@ -98,8 +98,8 @@ extension ArrowJSONIntegrationTest {
                 throw ArrowError.invalid("time type missing bitWidth/unit")
             }
             return bitWidth == 32
-            ? ArrowTypeTime32(unit == "SECOND" ? .seconds : .milliseconds)
-            : ArrowTypeTime64(unit == "MICROSECOND" ? .microseconds : .nanoseconds)
+                ? ArrowTypeTime32(unit == "SECOND" ? .seconds : .milliseconds)
+                : ArrowTypeTime64(unit == "MICROSECOND" ? .microseconds : .nanoseconds)
 
         case "timestamp":
             guard let unit = field.type.unit else {
@@ -242,9 +242,6 @@ extension ArrowJSONIntegrationTest {
             return (fieldType(name: "floatingpoint", precision: "SINGLE"), nil)
         case .double:
             return (fieldType(name: "floatingpoint", precision: "DOUBLE"), nil)
-            // NOTE: no .float16 case — ArrowTypeId's HalfFloat case is commented out
-            // upstream, so the official library doesn't support it yet.
-
         case .string:
             return (fieldType(name: "utf8"), nil)
         case .binary:

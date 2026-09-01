@@ -22,32 +22,32 @@ struct ArrowJSON: Codable, Equatable {
     let schema: Schema
     let batches: [Batch]
     let dictionaries: [Dictionary]?
-    
+
     struct Dictionary: Codable, Equatable {
         let id: Int
         let data: Batch
     }
-    
+
     struct DictionaryInfo: Codable, Equatable {
         let id: Int
         let indexType: FieldType
         let isOrdered: Bool?
     }
-    
+
     struct Schema: Codable, Equatable {
         let fields: [Field]
         let metadata: [String: String]?
-        
+
         enum CodingKeys: String, CodingKey {
             case fields
             case metadata
         }
-        
+
         init(fields: [Field], metadata: [String: String]?) {
             self.fields = fields
             self.metadata = metadata
         }
-        
+
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.fields = try container.decode([Field].self, forKey: .fields)
@@ -61,7 +61,7 @@ struct ArrowJSON: Codable, Equatable {
             }
         }
     }
-    
+
     struct Field: Codable, Equatable {
         let name: String
         let type: FieldType
@@ -69,7 +69,7 @@ struct ArrowJSON: Codable, Equatable {
         let children: [Field]?
         let dictionary: DictionaryInfo?
         let metadata: [String: String]?
-        
+
         init(
             name: String,
             type: FieldType,
@@ -85,7 +85,7 @@ struct ArrowJSON: Codable, Equatable {
             self.dictionary = dictionary
             self.metadata = metadata
         }
-        
+
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.name = try container.decode(String.self, forKey: .name)
@@ -108,7 +108,7 @@ struct ArrowJSON: Codable, Equatable {
                 self.metadata = nil
             }
         }
-        
+
         enum CodingKeys: String, CodingKey {
             case name
             case type
@@ -118,7 +118,7 @@ struct ArrowJSON: Codable, Equatable {
             case metadata
         }
     }
-    
+
     struct FieldType: Codable, Equatable {
         let name: String
         let byteWidth: Int?
@@ -130,12 +130,12 @@ struct ArrowJSON: Codable, Equatable {
         let timezone: String?
         let listSize: Int?
     }
-    
+
     struct Batch: Codable, Equatable {
         let count: Int
         let columns: [Column]
     }
-    
+
     struct Column: Codable, Equatable {
         let name: String
         let count: Int
@@ -145,7 +145,7 @@ struct ArrowJSON: Codable, Equatable {
         let views: [View?]?
         let variadicDataBuffers: [String]?
         let children: [Column]?
-        
+
         enum CodingKeys: String, CodingKey {
             case name
             case count
@@ -156,7 +156,7 @@ struct ArrowJSON: Codable, Equatable {
             case variadicDataBuffers = "VARIADIC_DATA_BUFFERS"
             case children
         }
-        
+
         init(
             name: String,
             count: Int,
@@ -176,7 +176,7 @@ struct ArrowJSON: Codable, Equatable {
             self.variadicDataBuffers = variadicDataBuffers
             self.children = children
         }
-        
+
         // The custom decoder is required because 64 bit offsets are encoded
         // as Strings presumably because some JSON libs can't handle it.
         init(from decoder: Decoder) throws {
@@ -189,13 +189,13 @@ struct ArrowJSON: Codable, Equatable {
             variadicDataBuffers = try container.decodeIfPresent(
                 [String].self, forKey: .variadicDataBuffers)
             children = try container.decodeIfPresent([Column].self, forKey: .children)
-            
+
             // Decode offset as either [Int64] or [String], converting strings to Int64
             if let offsetInts = try? container.decodeIfPresent(
                 [Int64].self, forKey: .offset) {
                 offset = offsetInts
             } else if let offsetStrings = try? container.decodeIfPresent(
-                [String].self, forKey: .offset) {
+                        [String].self, forKey: .offset) {
                 offset = try offsetStrings.map { str in
                     guard let value = Int64(str) else {
                         throw DecodingError.dataCorruptedError(
@@ -211,7 +211,7 @@ struct ArrowJSON: Codable, Equatable {
             }
         }
     }
-    
+
     enum Value: Codable, Equatable {
         case int(Int)
         case string(String)
@@ -231,10 +231,9 @@ enum DataValue: Codable, Equatable {
     case int(Int)
     case bool(Bool)
     case null
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        
         if container.decodeNil() {
             self = .null
         } else if let intValue = try? container.decode(Int.self) {
@@ -258,13 +257,13 @@ enum DataValue: Codable, Equatable {
 
 /// Represents an inline value in a binary view or utf8 view.
 struct View: Codable, Equatable {
-    
+
     let size: Int32
     let inlined: String?
     let prefixHex: String?
     let bufferIndex: Int32?
     let offset: Int32?
-    
+
     // Inlined case (≤12 bytes)
     init(size: Int32, inlined: String) {
         self.size = size
@@ -273,7 +272,7 @@ struct View: Codable, Equatable {
         self.bufferIndex = nil
         self.offset = nil
     }
-    
+
     // Reference case (>12 bytes)
     init(size: Int32, prefixHex: String, bufferIndex: Int32, offset: Int32) {
         self.size = size
@@ -282,7 +281,7 @@ struct View: Codable, Equatable {
         self.bufferIndex = bufferIndex
         self.offset = offset
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case size = "SIZE"
         case inlined = "INLINED"
@@ -293,7 +292,7 @@ struct View: Codable, Equatable {
 }
 
 extension ArrowJSON.Column {
-    
+
     /// Filter for the valid values.
     /// - Returns: The test column data with nulls in place of junk values.
     func withoutPlaceholderValues() -> Self {
@@ -324,7 +323,7 @@ extension ArrowJSON.Column {
 /// - Throws: If decoding fails.
 /// - Returns: A metadata dictionary.
 private func buildDictionary(
-  from keyValues: inout any UnkeyedDecodingContainer
+    from keyValues: inout any UnkeyedDecodingContainer
 ) throws -> [String: String]? {
     var dict: [String: String] = [:]
     while !keyValues.isAtEnd {
