@@ -162,7 +162,7 @@ public class ArrowReader { // swiftlint:disable:this type_body_length
         }
 
         // Null buffer may be zero-length indicating all array elements are valid.
-        let nullLength: UInt = nullBuffer.length > 0 ? (UInt(node.length) + 7) / 8 : 0
+        let nullLength = UInt(nullBuffer.length)
         let arrowNullBuffer = makeBuffer(nullBuffer, fileData: loadInfo.fileData,
                                          length: nullLength, messageOffset: loadInfo.messageOffset)
         let arrowValueBuffer = makeBuffer(valueBuffer, fileData: loadInfo.fileData,
